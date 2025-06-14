@@ -29,10 +29,6 @@ model = keras.Sequential([
 # Compile model
 model.compile(optimizer=Adam(learning_rate=0.001), loss="binary_crossentropy", metrics=["accuracy"])
 
-# Set up MLflow tracking
-mlflow.set_tracking_uri("http://127.0.0.1:5000/")
-mlflow.set_experiment("mlflow-keras-banking")
-
 with mlflow.start_run():
 
     # Log model parameters
