@@ -36,14 +36,14 @@ jobs:
       - name: Set up Conda
         uses: conda-incubator/setup-miniconda@v2
         with:
-          environment-file: conda.yaml
+          environment-file: MLproject/conda.yaml
           activate-environment: mlflow-env
           auto-activate-base: false
           
       # Run as a mlflow project
       - name: Run mlflow project
         run: |
-          mlflow run . --env-manager=local
+          mlflow run MLproject --env-manager=local
           
       - name: Set up Git LFS
         run: |
