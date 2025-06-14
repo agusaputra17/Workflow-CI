@@ -1,6 +1,6 @@
 name: workflow-ci
  
-conda_env: MLproject/conda.yaml
+conda_env: conda.yaml
  
 entry_points:
   main:
