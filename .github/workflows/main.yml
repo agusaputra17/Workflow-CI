@@ -43,6 +43,7 @@ jobs:
       # Run as a mlflow project
       - name: Run mlflow project
         run: |
+          conda activate mlflow-env
           mlflow run MLproject --env-manager=local
           
       - name: Set up Git LFS
