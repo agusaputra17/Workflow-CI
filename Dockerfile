@@ -1,4 +1,4 @@
-# Gunakan base image dengan Python 3.10 agar kompatibel dengan TensorFlow 2.18
+# Gunakan base image dengan Python
 FROM python:3.12.7
 
 # Buat working directory
