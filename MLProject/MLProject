@@ -1,0 +1,9 @@
+name: workflow-ci
+ 
+conda_env: conda.yaml
+ 
+entry_points:
+  main:
+    parameters:
+      dataset : {type: string, default: "banking-data_preprocessing.csv"}
+    command: "python modelling.py {dataset}"
