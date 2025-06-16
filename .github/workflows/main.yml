@@ -53,10 +53,38 @@ jobs:
           echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
           echo "Latest run_id: $RUN_ID"
 
+      # Get latest run_id
+      - name: Get latest run_id
+        run: |
+          RUN_ID=$(ls -td mlruns/0/*/ | head -n 1 | cut -d'/' -f3)
+          echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
+          echo "Latest run_id: $RUN_ID"
+          
       - name: Build Docker Image from MLflow Model
         run: |
           mlflow models build-docker --model-uri "runs:/$RUN_ID/model" --name workflow-ci
 
+      # Copy model artifacts
+      - name: Copy model artifacts to models/
+        run: |
+          mkdir -p models/
+          cp -r mlruns/0/$RUN_ID/artifacts/model models/
+          
+      # Save models to GitHub Repository
+      - name: Save mlruns to repo
+        run: |
+          git config --global user.name ${{ secrets.username }}
+          git config --global user.email ${{ secrets.email }}
+          git add -f models/
+          git commit -m "Save trained model artifacts" || true
+          git pull --rebase origin main 
+          git push origin main
+
+      # Build Docker Image from MLflow Model
+      - name: Build Docker Image from MLflow Model
+        run: |
+          mlflow models build-docker --model-uri "runs:/$RUN_ID/model" --name workflow-ci
+    
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -70,13 +98,3 @@ jobs:
       - name: Push Docker Image to Docker Hub
         run: |
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/workflow-ci:latest
-
-       # Save models to GitHub Repository
-      - name: Save mlruns to repo
-        run: |
-          git config --global user.name ${{ secrets.username }}
-          git config --global user.email ${{ secrets.email }}
-          git add -f mlruns/
-          git commit -m "Save mlruns from CI run" || true
-          git pull --rebase origin main 
-          git push origin main
