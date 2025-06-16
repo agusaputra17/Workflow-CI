@@ -83,6 +83,8 @@ jobs:
       # Build Docker Image from MLflow Model
       - name: Build Docker Image from MLflow Model
         run: |
+          source $(conda info --base)/etc/profile.d/conda.sh
+          conda activate mlflow-env
           mlflow models build-docker --model-uri "runs:/$RUN_ID/model" --name workflow-ci
     
       - name: Log in to Docker Hub
