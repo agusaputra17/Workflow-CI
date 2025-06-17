@@ -6,8 +6,6 @@ from tensorflow import keras
 from tensorflow.keras.optimizers import Adam
 import warnings
 import mlflow
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 
 warnings.filterwarnings("ignore")
@@ -50,21 +48,6 @@ with mlflow.start_run():
     recall = recall_score(y_val, y_pred)
     f1 = f1_score(y_val, y_pred)
 
-    # Buat confusion matrix
-    cm = confusion_matrix(y_val, y_pred)
-
-    # Plot dan simpan confusion matrix
-    plt.figure(figsize=(6,5))
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=[0,1], yticklabels=[0,1])
-    plt.xlabel('Predicted')
-    plt.ylabel('Actual')
-    plt.title('Confusion Matrix')
-    plt.tight_layout()
-
-    # Simpan gambar
-    plt.savefig("confusion_matrix.png")
-    plt.close()
-
     # Log model metrik
     mlflow.log_metric("accuracy", history.history['accuracy'][-1])
     mlflow.log_metric("loss", history.history['loss'][-1])
@@ -73,7 +56,6 @@ with mlflow.start_run():
     mlflow.log_metric("val_precision", precision)
     mlflow.log_metric("val_recall", recall)
     mlflow.log_metric("val_f1_score", f1)
-    mlflow.log_artifact("confusion_matrix.png")
 
     # Log model eksplisit agar bisa di-serve
     mlflow.tensorflow.log_model(model, artifact_path="model")
