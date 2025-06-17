@@ -65,7 +65,7 @@ with mlflow.start_run():
     plt.savefig("confusion_matrix.png")
     plt.close()
 
-    # Log metrik
+    # Log model metrik
     mlflow.log_metric("accuracy", history.history['accuracy'][-1])
     mlflow.log_metric("loss", history.history['loss'][-1])
     mlflow.log_metric("val_loss", score[0])
@@ -74,6 +74,9 @@ with mlflow.start_run():
     mlflow.log_metric("val_recall", recall)
     mlflow.log_metric("val_f1_score", f1)
     mlflow.log_artifact("confusion_matrix.png")
+
+    # Log model eksplisit agar bisa di-serve
+    mlflow.tensorflow.log_model(model, artifact_path="model")
 
     # Print hasil
     print(f"Validation precision: {precision:.2f}")
